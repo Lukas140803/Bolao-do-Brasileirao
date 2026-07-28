@@ -401,6 +401,73 @@ const JOGOS_COPA = (() => {
   return lista;
 })();
 
+// Jogos confirmados das rodadas 21 a 25 (agosto/2026) — dados oficiais CBF
+// Jogos com data/hora ainda não confirmada pela CBF usam data provisória:
+// o admin pode ajustar data e hora reais assim que a CBF divulgar.
+const JOGOS_OVERRIDES = {
+  // ── RODADA 21 (29-30/07) — confirmados ──
+  2101: {pais1:"Internacional",code1:"internacional",pais2:"Flamengo",code2:"flamengo",data:"2026-07-29",hora:"19:30"},
+  2102: {pais1:"Mirassol",code1:"mirassol",pais2:"Remo",code2:"clube-do-remo",data:"2026-07-29",hora:"19:30"},
+  2103: {pais1:"Fluminense",code1:"fluminense",pais2:"Bahia",code2:"bahia",data:"2026-07-29",hora:"21:30"},
+  2104: {pais1:"Vitória",code1:"vitoria",pais2:"Palmeiras",code2:"palmeiras",data:"2026-07-29",hora:"21:30"},
+  2105: {pais1:"Corinthians",code1:"corinthians",pais2:"Athletico-PR",code2:"athletico-pr",data:"2026-07-30",hora:"19:30"},
+  2106: {pais1:"Coritiba",code1:"coritiba",pais2:"Cruzeiro",code2:"cruzeiro",data:"2026-07-30",hora:"21:30"},
+  // RODADA 21 — data/hora ainda a definir (adiados por causa da Sul-Americana)
+  2107: {pais1:"Botafogo",code1:"botafogo",pais2:"Grêmio",code2:"gremio",data:"2026-08-05",hora:"20:00"},
+  2108: {pais1:"São Paulo",code1:"sao-paulo",pais2:"Santos",code2:"santos",data:"2026-08-05",hora:"20:00"},
+  2109: {pais1:"Atlético-MG",code1:"atletico-mg",pais2:"Bragantino",code2:"bragantino",data:"2026-08-05",hora:"20:00"},
+  2110: {pais1:"Chapecoense",code1:"chapecoense",pais2:"Vasco",code2:"vasco",data:"2026-08-05",hora:"20:00"},
+
+  // ── RODADA 22 (08-09/08) — confirmados ──
+  2201: {pais1:"Grêmio",code1:"gremio",pais2:"São Paulo",code2:"sao-paulo",data:"2026-08-08",hora:"16:00"},
+  2202: {pais1:"Remo",code1:"clube-do-remo",pais2:"Atlético-MG",code2:"atletico-mg",data:"2026-08-08",hora:"18:30"},
+  2203: {pais1:"Coritiba",code1:"coritiba",pais2:"Chapecoense",code2:"chapecoense",data:"2026-08-08",hora:"20:30"},
+  2204: {pais1:"Botafogo",code1:"botafogo",pais2:"Fluminense",code2:"fluminense",data:"2026-08-08",hora:"21:00"},
+  2205: {pais1:"Cruzeiro",code1:"cruzeiro",pais2:"Mirassol",code2:"mirassol",data:"2026-08-09",hora:"11:00"},
+  2206: {pais1:"Palmeiras",code1:"palmeiras",pais2:"Internacional",code2:"internacional",data:"2026-08-09",hora:"16:00"},
+  2207: {pais1:"Bahia",code1:"bahia",pais2:"Vasco",code2:"vasco",data:"2026-08-09",hora:"16:00"},
+  2208: {pais1:"Santos",code1:"santos",pais2:"Athletico-PR",code2:"athletico-pr",data:"2026-08-09",hora:"18:30"},
+  2209: {pais1:"Bragantino",code1:"bragantino",pais2:"Corinthians",code2:"corinthians",data:"2026-08-09",hora:"18:30"},
+  2210: {pais1:"Flamengo",code1:"flamengo",pais2:"Vitória",code2:"vitoria",data:"2026-08-09",hora:"19:30"},
+
+  // ── RODADA 23 (15-17/08) — confirmados ──
+  2301: {pais1:"Fluminense",code1:"fluminense",pais2:"Palmeiras",code2:"palmeiras",data:"2026-08-15",hora:"16:30"},
+  2302: {pais1:"Atlético-MG",code1:"atletico-mg",pais2:"Grêmio",code2:"gremio",data:"2026-08-15",hora:"16:30"},
+  2303: {pais1:"Athletico-PR",code1:"athletico-pr",pais2:"Bragantino",code2:"bragantino",data:"2026-08-15",hora:"18:30"},
+  2304: {pais1:"São Paulo",code1:"sao-paulo",pais2:"Coritiba",code2:"coritiba",data:"2026-08-15",hora:"21:00"},
+  2305: {pais1:"Chapecoense",code1:"chapecoense",pais2:"Bahia",code2:"bahia",data:"2026-08-16",hora:"11:00"},
+  2306: {pais1:"Vasco",code1:"vasco",pais2:"Santos",code2:"santos",data:"2026-08-16",hora:"16:00"},
+  2307: {pais1:"Mirassol",code1:"mirassol",pais2:"Flamengo",code2:"flamengo",data:"2026-08-16",hora:"18:30"},
+  2308: {pais1:"Vitória",code1:"vitoria",pais2:"Botafogo",code2:"botafogo",data:"2026-08-16",hora:"18:30"},
+  2309: {pais1:"Corinthians",code1:"corinthians",pais2:"Cruzeiro",code2:"cruzeiro",data:"2026-08-16",hora:"19:30"},
+  2310: {pais1:"Internacional",code1:"internacional",pais2:"Remo",code2:"clube-do-remo",data:"2026-08-17",hora:"20:00"},
+
+  // ── RODADA 24 (22-24/08) — confirmados ──
+  2401: {pais1:"Fluminense",code1:"fluminense",pais2:"Remo",code2:"clube-do-remo",data:"2026-08-22",hora:"16:00"},
+  2402: {pais1:"Internacional",code1:"internacional",pais2:"Atlético-MG",code2:"atletico-mg",data:"2026-08-22",hora:"18:30"},
+  2403: {pais1:"Cruzeiro",code1:"cruzeiro",pais2:"Flamengo",code2:"flamengo",data:"2026-08-22",hora:"20:30"},
+  2404: {pais1:"Palmeiras",code1:"palmeiras",pais2:"Vasco",code2:"vasco",data:"2026-08-23",hora:"16:00"},
+  2405: {pais1:"Bragantino",code1:"bragantino",pais2:"Grêmio",code2:"gremio",data:"2026-08-23",hora:"16:00"},
+  2406: {pais1:"Vitória",code1:"vitoria",pais2:"Bahia",code2:"bahia",data:"2026-08-23",hora:"16:00"},
+  2407: {pais1:"Santos",code1:"santos",pais2:"Mirassol",code2:"mirassol",data:"2026-08-23",hora:"18:30"},
+  2408: {pais1:"Chapecoense",code1:"chapecoense",pais2:"São Paulo",code2:"sao-paulo",data:"2026-08-23",hora:"18:30"},
+  2409: {pais1:"Coritiba",code1:"coritiba",pais2:"Corinthians",code2:"corinthians",data:"2026-08-23",hora:"19:30"},
+  2410: {pais1:"Botafogo",code1:"botafogo",pais2:"Athletico-PR",code2:"athletico-pr",data:"2026-08-24",hora:"20:00"},
+
+  // ── RODADA 25 (29-31/08) — CBF ainda não divulgou data/hora exata; confrontos confirmados ──
+  2501: {pais1:"Flamengo",code1:"flamengo",pais2:"Botafogo",code2:"botafogo",data:"2026-08-30",hora:"16:00"},
+  2502: {pais1:"Vasco",code1:"vasco",pais2:"Cruzeiro",code2:"cruzeiro",data:"2026-08-30",hora:"16:00"},
+  2503: {pais1:"São Paulo",code1:"sao-paulo",pais2:"Bragantino",code2:"bragantino",data:"2026-08-30",hora:"16:00"},
+  2504: {pais1:"Corinthians",code1:"corinthians",pais2:"Santos",code2:"santos",data:"2026-08-30",hora:"16:00"},
+  2505: {pais1:"Mirassol",code1:"mirassol",pais2:"Palmeiras",code2:"palmeiras",data:"2026-08-30",hora:"16:00"},
+  2506: {pais1:"Atlético-MG",code1:"atletico-mg",pais2:"Vitória",code2:"vitoria",data:"2026-08-30",hora:"16:00"},
+  2507: {pais1:"Grêmio",code1:"gremio",pais2:"Chapecoense",code2:"chapecoense",data:"2026-08-30",hora:"16:00"},
+  2508: {pais1:"Athletico-PR",code1:"athletico-pr",pais2:"Fluminense",code2:"fluminense",data:"2026-08-30",hora:"16:00"},
+  2509: {pais1:"Bahia",code1:"bahia",pais2:"Internacional",code2:"internacional",data:"2026-08-30",hora:"16:00"},
+  2510: {pais1:"Remo",code1:"clube-do-remo",pais2:"Coritiba",code2:"coritiba",data:"2026-08-30",hora:"16:00"},
+};
+JOGOS_COPA.forEach(j => { if (JOGOS_OVERRIDES[j.id]) Object.assign(j, JOGOS_OVERRIDES[j.id]); });
+
 // Brasileirão não tem mata-mata — array vazio
 const JOGOS_MATA_BASE = [];
 
