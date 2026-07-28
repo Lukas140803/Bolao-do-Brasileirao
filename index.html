@@ -201,8 +201,7 @@ select.user-select{background:#ffffff;border:1px solid #b5d0c3;color:#1a2e28;bor
   <div id="abas">
     <button class="aba-btn ativa" onclick="mudarAba('proximos',this)">Próximos jogos</button>
     <button class="aba-btn" onclick="mudarAba('grupos',this)">Todas as rodadas</button>
-    <button class="aba-btn" onclick="mudarAba('bonus',this)">Bônus</button>
-    <button class="aba-btn" onclick="mudarAba('rankingrodada',this)">Ranking Rodada</button>
+    <button class="aba-btn" onclick="mudarAba('rankingrodada',this)">Ranking Mensal</button>
     <button class="aba-btn" onclick="mudarAba('classificacao',this)">Classificação Geral</button>
     <button class="aba-btn" onclick="mudarAba('todos',this)">Todos os palpites</button>
   </div>
@@ -212,7 +211,7 @@ select.user-select{background:#ffffff;border:1px solid #b5d0c3;color:#1a2e28;bor
 <div id="main" style="display:none">
   <div id="sidebar">
     <div class="card">
-      <div class="card-titulo">🔄 Ranking da Rodada</div>
+      <div class="card-titulo">🔄 Ranking Mensal</div>
       <div id="ranking-list"><div style="color:#7a9188;font-size:13px">Nenhum participante ainda.</div></div>
     </div>
     <div class="card" style="background:#ffffff">
@@ -220,7 +219,6 @@ select.user-select{background:#ffffff;border:1px solid #b5d0c3;color:#1a2e28;bor
       <div class="pts-row"><span style="color:#4d675d">🎯 Placar exato</span><span style="color:#00875A;font-weight:700">3 pts</span></div>
       <div class="pts-row"><span style="color:#4d675d">✅ Vencedor ou empate</span><span style="color:#4caf50;font-weight:700">1 pt</span></div>
       <div class="pts-row"><span style="color:#4d675d">❌ Errou</span><span style="color:#f55;font-weight:700">0 pts</span></div>
-      <div style="margin-top:10px;font-size:11px;color:#7a9188">+ pontos bônus no fim do campeonato</div>
     </div>
   </div>
   <div id="content"></div>
@@ -765,7 +763,7 @@ function renderConteudo() {
   const el=document.getElementById("content");
   const aba=STATE.abaAtual;
 
-  const alertEntrar = !STATE.usuarioAtual && ["proximos","grupos","mata","bonus"].includes(aba)
+  const alertEntrar = !STATE.usuarioAtual && ["proximos","grupos","mata"].includes(aba)
     ? `<div class="alert-entrar">
         <div style="font-size:14px;color:#00875A;font-weight:700;margin-bottom:6px">Informe quem você é para palpitar.</div>
         <div style="font-size:12px;color:#6b8279;margin-bottom:14px">Selecione seu nome ou cadastre-se.</div>
@@ -776,7 +774,6 @@ function renderConteudo() {
     el.innerHTML = alertEntrar + renderJogosAba(aba);
     return;
   }
-  if(aba==="bonus") { el.innerHTML = alertEntrar + (STATE.usuarioAtual ? renderBonus() : ""); return; }
   if(aba==="rankingrodada") { el.innerHTML = renderRankingRodada(); return; }
   if(aba==="classificacao") { el.innerHTML = renderClassificacao(); return; }
   if(aba==="todos") { el.innerHTML = renderTodosPalpites(); return; }
@@ -851,39 +848,8 @@ function jogoCardHTML(jogo, aba) {
     </div>`;
   }
 
-  // Campo "Quem classifica?" — só em jogos de mata-mata com times definidos
+  // Brasileirão não usa "quem classifica" — só o placar importa para a pontuação
   let classifHTML = "";
-  if (isMata && jogo.code1 !== "xx" && jogo.code2 !== "xx") {
-    const bloqueado = !uid || st !== "pendente";
-    const escolhido = pal.classif || "";
-    const realC = jogo.classificadoReal;
-    if (st === "finalizado" && realC) {
-      // Mostra resultado
-      const acertou = escolhido && escolhido === realC;
-      const nomeClassReal = realC === "1" ? jogo.pais1 : jogo.pais2;
-      const nomeClassPal = escolhido ? (escolhido === "1" ? jogo.pais1 : jogo.pais2) : "—";
-      classifHTML = `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e4efe9;font-size:12px;color:#5a736a;display:flex;justify-content:space-between;align-items:center">
-        <span>Classificou: <span style="color:#1a2e28;font-weight:600">${nomeClassReal}</span></span>
-        <span style="color:${acertou?"#4caf50":"#f55"}">Você: ${nomeClassPal} ${acertou?"✅ +1":"❌"}</span>
-      </div>`;
-    } else {
-      const op1Sel = escolhido === "1";
-      const op2Sel = escolhido === "2";
-      classifHTML = `<div style="margin-top:12px;padding-top:12px;border-top:1px solid #e4efe9">
-        <div style="font-size:11px;color:#5a736a;margin-bottom:8px;text-align:center">🏆 Quem classifica? (pênaltis/prorrogação contam)</div>
-        <div style="display:flex;gap:8px">
-          <button onclick="salvarClassif(${jogo.id},'1')" ${bloqueado?"disabled":""}
-            style="flex:1;padding:9px;border-radius:8px;border:2px solid ${op1Sel?"#00875A":"#c8ddd3"};background:${op1Sel?"#e0f2e9":"#ffffff"};color:${op1Sel?"#00875A":"#888"};font-weight:600;font-size:12px;cursor:${bloqueado?"not-allowed":"pointer"};opacity:${bloqueado?"0.4":"1"};display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif">
-            ${flagHTML(jogo.code1,jogo.pais1,16)} ${jogo.pais1}
-          </button>
-          <button onclick="salvarClassif(${jogo.id},'2')" ${bloqueado?"disabled":""}
-            style="flex:1;padding:9px;border-radius:8px;border:2px solid ${op2Sel?"#00875A":"#c8ddd3"};background:${op2Sel?"#e0f2e9":"#ffffff"};color:${op2Sel?"#00875A":"#888"};font-weight:600;font-size:12px;cursor:${bloqueado?"not-allowed":"pointer"};opacity:${bloqueado?"0.4":"1"};display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Inter',sans-serif">
-            ${flagHTML(jogo.code2,jogo.pais2,16)} ${jogo.pais2}
-          </button>
-        </div>
-      </div>`;
-    }
-  }
 
   let footer="";
   if(st==="finalizado"&&uid){
@@ -985,8 +951,8 @@ function renderRankingRodada() {
     ? `desde ${formatData(STATE.checkpoint._dataInicio.split("T")[0])}`
     : "desde o início da Copa";
   const infoTopo = `<div style="font-size:12px;color:#5a736a;margin-bottom:14px">Pontuação acumulada ${dataInicio}. Zera só quando o admin iniciar uma nova rodada.</div>`;
-  if(!ranking.length) return `<div class="card"><div class="card-titulo">🔄 Ranking da Rodada</div>${infoTopo}<div style="color:#7a9188;font-size:13px">Nenhum participante.</div></div>`;
-  return `<div class="card"><div class="card-titulo">🔄 Ranking da Rodada</div>${infoTopo}`+
+  if(!ranking.length) return `<div class="card"><div class="card-titulo">🔄 Ranking Mensal</div>${infoTopo}<div style="color:#7a9188;font-size:13px">Nenhum participante.</div></div>`;
+  return `<div class="card"><div class="card-titulo">🔄 Ranking Mensal</div>${infoTopo}`+
     ranking.map((p,i)=>`
       <div style="display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid #e4efe9">
         <div class="rank-pos" style="${rankPosCor(i)}">${i+1}</div>
@@ -1072,18 +1038,18 @@ function renderAdminRodadas() {
     <div style="background:#ffffff;border:1px solid #ffffff;border-radius:8px;padding:16px;margin-bottom:14px">
       <div style="font-weight:700;font-size:14px;margin-bottom:8px">📊 Status atual</div>
       ${temCheckpoint
-        ? `<div style="font-size:12px;color:#5a736a">Rodada atual iniciada em: <span style="color:#00875A">${dataInicio}</span></div>
-           <div style="font-size:12px;color:#5a736a;margin-top:4px">A "Classificação Geral" sempre soma tudo desde o início da Copa. O "Ranking da Rodada" mostra só os pontos ganhos a partir da data acima.</div>`
-        : `<div style="font-size:12px;color:#5a736a">Nenhuma rodada iniciada ainda — Ranking da Rodada e Classificação Geral são iguais.</div>`
+        ? `<div style="font-size:12px;color:#5a736a">Mês atual iniciado em: <span style="color:#00875A">${dataInicio}</span></div>
+           <div style="font-size:12px;color:#5a736a;margin-top:4px">A "Classificação Geral" sempre soma tudo desde o início do campeonato. O "Ranking Mensal" mostra só os pontos ganhos a partir da data acima.</div>`
+        : `<div style="font-size:12px;color:#5a736a">Nenhum mês iniciado ainda — Ranking Mensal e Classificação Geral são iguais.</div>`
       }
     </div>
 
     <div style="background:#e8f7ef;border:1px solid #00875A;border-radius:8px;padding:16px;margin-bottom:14px">
-      <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#00875A">🔄 Iniciar Nova Rodada</div>
+      <div style="font-weight:700;font-size:14px;margin-bottom:6px;color:#00875A">🔄 Iniciar Novo Mês</div>
       <div style="font-size:12px;color:#40584f;margin-bottom:14px">
-        Isso salva a pontuação atual de cada participante como ponto de partida. A partir de agora, o "Ranking da Rodada" volta a contar do zero — mas a "Classificação Geral" continua somando tudo normalmente até o fim da Copa. Os palpites e jogos antigos continuam visíveis, nada é apagado.
+        Isso salva a pontuação atual de cada participante como ponto de partida. A partir de agora, o "Ranking Mensal" volta a contar do zero — mas a "Classificação Geral" continua somando tudo normalmente até o fim do campeonato. Os palpites e jogos antigos continuam visíveis, nada é apagado.
       </div>
-      <button class="btn" style="width:100%;padding:12px" onclick="adminIniciarRodada()">Iniciar Nova Rodada agora</button>
+      <button class="btn" style="width:100%;padding:12px" onclick="adminIniciarRodada()">Iniciar Novo Mês agora</button>
     </div>
 
     <div style="font-size:12px;color:#00875A;font-weight:700;letter-spacing:1px;margin-bottom:10px">PONTUAÇÃO ATUAL (que será usada como base)</div>
@@ -1760,7 +1726,7 @@ window.adminSalvarGabarito = async function() {
 };
 
 window.adminIniciarRodada = async function() {
-  if(!confirm("Iniciar uma nova rodada agora?\n\nO Ranking da Rodada vai voltar a contar do zero a partir deste momento. A Classificação Geral continua somando tudo normalmente. Nenhum palpite ou placar é apagado.")) return;
+  if(!confirm("Iniciar um novo mês agora?\n\nO Ranking Mensal vai voltar a contar do zero a partir deste momento. A Classificação Geral continua somando tudo normalmente. Nenhum palpite ou placar é apagado.")) return;
   try {
     const ranking = calcRanking();
     const novoCheckpoint = { _dataInicio: new Date().toISOString() };
@@ -1768,7 +1734,7 @@ window.adminIniciarRodada = async function() {
       novoCheckpoint[p.id] = { pontos: p.pontos, exatos: p.exatos, venc: p.venc, ptsBon: p.ptsBon };
     });
     await set(ref(db,"brasileirao/checkpoint"), novoCheckpoint);
-    alert("✅ Nova rodada iniciada! O Ranking da Rodada começou a contar do zero.");
+    alert("✅ Novo mês iniciado! O Ranking Mensal começou a contar do zero.");
     renderAdminConteudo();
   } catch(e) {
     alert("❌ Erro ao iniciar rodada: " + e.message);
