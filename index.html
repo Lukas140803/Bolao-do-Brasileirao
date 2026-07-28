@@ -982,7 +982,9 @@ function renderClassificacao() {
 }
 
 function renderTodosPalpites() {
+  const configurado = j => j.pais1 !== "A definir" && j.code1 !== "xx";
   const finalizados = [...getJogosCompletos(),...getJogosMataCompletos()]
+    .filter(configurado)
     .filter(j=>statusJogo(j)==="andamento"||statusJogo(j)==="encerrado"||j.placarReal1!==null)
     .sort((a,b)=> new Date(`${b.data}T${b.hora}:00-03:00`) - new Date(`${a.data}T${a.hora}:00-03:00`));
   if(!finalizados.length) return `<div class="card empty-state"><div class="empty-icon">📋</div><div class="empty-title">Nenhum jogo finalizado ainda</div></div>`;
